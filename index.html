@@ -41,26 +41,30 @@ html<!DOCTYPE html>
     <!-- References the exact filename sitting in your GitHub list -->
     <audio id="bg-music" preload="auto">
         <source src="music.mp3.mp3" type="audio/mpeg">
-        <source src="music.mp3.MP3" type="audio/mpeg">
     </audio>
 
     <script>
         function runAestheticPrank() {
             const audio = document.getElementById('bg-music');
             
-            // Forces the iPad browser to immediately link to your double-extension file on click
+            // iPad/Safari Fix: First force load the track
             audio.load(); 
-            audio.currentTime = 0; 
             
-            audio.play().catch(error => {
-                console.log("Audio playback error:", error);
+            // Wait for audio data to be ready before skipping to 26s
+            audio.addEventListener('canplaythrough', function onCanPlay() {
+                audio.currentTime = 26; // Starts exactly at 26 seconds!
+                audio.play().catch(error => {
+                    console.log("Playback error:", error);
+                });
+                // Remove listener so it doesn't fire multiple times
+                audio.removeEventListener('canplaythrough', onCanPlay);
             });
 
-            // Automatically turns off the music after exactly 60 seconds
+            // Automatically turns off the music after 59 seconds (reaches 1 min 25 secs)
             setTimeout(() => {
                 audio.pause();
                 audio.currentTime = 0;
-            }, 60000); 
+            }, 59000); 
 
             // Smooth fade-out transition for the initial quiz box
             const overlay = document.getElementById('quiz-overlay');
