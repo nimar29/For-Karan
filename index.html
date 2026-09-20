@@ -8,85 +8,67 @@ html<!DOCTYPE html>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html { width: 100%; height: 100%; overflow: hidden; background-color: #060a12; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; align-items: center; color: #fff; }
         
-        /* Step 1: Minimalist Question Box */
+        /* Step 1: Bold Aesthetic Quiz Box */
         #quiz-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #060a12; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        h1 { margin-bottom: 40px; font-size: 1.8rem; font-weight: 300; letter-spacing: 4px; text-align: center; color: #cdd7e5; }
-        .btn-container { display: flex; gap: 40px; }
-        button { padding: 14px 45px; font-size: 1rem; font-weight: 400; letter-spacing: 2px; cursor: pointer; border: 1px solid #1e293b; background-color: transparent; color: #64748b; border-radius: 2px; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; }
-        button:hover { border-color: #38bdf8; color: #38bdf8; background-color: rgba(56, 189, 248, 0.03); box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
+        h1 { margin-bottom: 40px; font-size: 2.2rem; font-weight: 800; letter-spacing: 4px; text-align: center; color: #f8fafc; text-transform: uppercase; text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+        .btn-container { display: flex; flex-direction: column; gap: 20px; width: 80%; max-width: 300px; }
+        button { padding: 16px 40px; font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; border: 2px solid #1e293b; background-color: transparent; color: #94a3b8; border-radius: 12px; transition: all 0.4s ease; -webkit-tap-highlight-color: transparent; text-transform: uppercase; }
+        button:hover { border-color: #00d2ff; color: #00d2ff; background-color: rgba(0, 210, 255, 0.03); box-shadow: 0 0 20px rgba(0, 210, 255, 0.2); transform: translateY(-2px); }
         
         /* Step 2: Aesthetic Cascade Typography */
-        #cascade-container { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; gap: 12px; }
-        .cascade-line { font-size: 2.2rem; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; color: #00d2ff; opacity: 0; transform: translateY(15px); transition: all 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); text-shadow: 0 0 25px rgba(0, 210, 255, 0.4); }
+        #cascade-container { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; gap: 16px; }
+        .cascade-line { font-size: 2.6rem; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; color: #00d2ff; opacity: 0; transform: translateY(20px); transition: all 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); text-shadow: 0 0 30px rgba(0, 210, 255, 0.5); }
         .cascade-line.reveal { opacity: 1; transform: translateY(0); }
-        .cascade-line:nth-child(even) { color: #f8fafc; text-shadow: 0 0 20px rgba(248, 250, 252, 0.2); font-weight: 300; font-size: 1.6rem; letter-spacing: 8px; }
         
-        /* Invisible background video player */
-        #yt-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+        /* Staggered alternating look for absolute aesthetics */
+        .cascade-line:nth-child(even) { color: #f8fafc; text-shadow: 0 0 20px rgba(248, 250, 252, 0.3); font-weight: 400; font-size: 1.9rem; letter-spacing: 8px; }
     </style>
-    <!-- Load the official YouTube framework API -->
-    <script src="https://youtube.com"></script>
 </head>
 <body>
 
+    <!-- Main Quiz Interface -->
     <div id="quiz-overlay">
-        <h1>Do you hate me?</h1>
+        <h1>Do You Hate Me?</h1>
         <div class="btn-container">
-            <button onclick="startPrank()">100%</button>
-            <button onclick="startPrank()">110%</button>
+            <button onclick="runAestheticPrank()">Yes</button>
+            <button onclick="runAestheticPrank()">110% Yes</button>
         </div>
     </div>
 
+    <!-- The Hidden Container where the "I Hate You Too" lines cascade -->
     <div id="cascade-container"></div>
     
-    <!-- Hidden element where the background player stream operates -->
-    <div id="yt-player"></div>
+    <!-- Direct local file reference -->
+    <audio id="bg-music" src="music.mp3" preload="auto"></audio>
 
     <script>
-        let player;
-        
-        // This initializes the YouTube frame automatically
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                videoId: '-oB-vvDC9ao', // Official NFAK Tere Bin Video ID
-                playerVars: {
-                    'start': 68,        // Starts right at 1 min 08 secs ("Tu vi sikh kadi...")
-                    'controls': 0,
-                    'disablekb': 1,
-                    'modestbranding': 1,
-                    'rel': 0
-                }
+        function runAestheticPrank() {
+            // Play your uploaded music file immediately on user click
+            const audio = document.getElementById('bg-music');
+            audio.currentTime = 0; // FIXED: Starts exactly at 0 seconds (the absolute beginning)
+            audio.play().catch(error => {
+                console.log("Audio playback error:", error);
             });
-        }
 
-        function startPrank() {
-            // Unmute and force video playback via user interaction click
-            if (player && typeof player.playVideo === 'function') {
-                player.seekTo(68, true);
-                player.unMute();
-                player.setVolume(100);
-                player.playVideo();
-            }
-
-            // Automatic 60 second absolute timer loop
+            // Automatically turns off the music after exactly 60 seconds
             setTimeout(() => {
-                if (player && typeof player.stopVideo === 'function') {
-                    player.stopVideo();
-                }
+                audio.pause();
+                audio.currentTime = 0;
             }, 60000); 
 
-            // Fade away the quiz box beautifully
+            // Smooth fade-out transition for the initial quiz box
             const overlay = document.getElementById('quiz-overlay');
             overlay.style.opacity = 0;
             setTimeout(() => { overlay.style.display = 'none'; }, 1200);
 
-            // Generate aesthetic text lines
+            // Display the aesthetic text waterfall block
             const container = document.getElementById('cascade-container');
             container.style.display = 'flex';
             
-            const linesToCreate = 7;
+            const linesToCreate = 6;
             const phrase = "I HATE YOU TOO";
 
+            // Creates the lines one after the other smoothly
             for (let i = 0; i < linesToCreate; i++) {
                 const line = document.createElement('div');
                 line.innerText = phrase;
@@ -95,9 +77,10 @@ html<!DOCTYPE html>
 
                 setTimeout(() => {
                     line.classList.add('reveal');
-                }, 800 + (i * 350));
+                }, 800 + (i * 400)); // Staggered delays for the beautiful dropdown look
             }
         }
     </script>
 </body>
 </html>
+    
