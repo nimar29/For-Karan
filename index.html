@@ -38,14 +38,20 @@ html<!DOCTYPE html>
     <!-- The Hidden Container where the "I Hate You Too" lines cascade -->
     <div id="cascade-container"></div>
     
-    <!-- Direct local file reference -->
-    <audio id="bg-music" src="music.mp3" preload="auto"></audio>
+    <!-- References the exact filename sitting in your GitHub list -->
+    <audio id="bg-music" preload="auto">
+        <source src="music.mp3.mp3" type="audio/mpeg">
+        <source src="music.mp3.MP3" type="audio/mpeg">
+    </audio>
 
     <script>
         function runAestheticPrank() {
-            // Play your uploaded music file immediately on user click
             const audio = document.getElementById('bg-music');
-            audio.currentTime = 0; // FIXED: Starts exactly at 0 seconds (the absolute beginning)
+            
+            // Forces the iPad browser to immediately link to your double-extension file on click
+            audio.load(); 
+            audio.currentTime = 0; 
+            
             audio.play().catch(error => {
                 console.log("Audio playback error:", error);
             });
@@ -83,4 +89,3 @@ html<!DOCTYPE html>
     </script>
 </body>
 </html>
-    
