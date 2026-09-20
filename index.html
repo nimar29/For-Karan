@@ -14,7 +14,7 @@ html<!DOCTYPE html>
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            background: linear-gradient(135deg, #090d16, #1e3a8a, #0f172a);
             color: #f8fafc;
             display: flex;
             justify-content: center;
@@ -25,83 +25,111 @@ html<!DOCTYPE html>
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            padding: 2.5rem;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 3rem 2.5rem;
+            border-radius: 28px;
+            border: 1px solid rgba(147, 197, 253, 0.08);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            max-width: 420px;
             width: 90%;
-            transition: all 0.5s ease;
+            position: relative;
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             margin-bottom: 2rem;
             letter-spacing: -0.5px;
             color: #93c5fd;
+            font-weight: 700;
         }
 
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         button {
-            background: rgba(30, 58, 138, 0.4);
+            background: rgba(30, 58, 138, 0.3);
             color: #bfdbfe;
-            border: 1px solid rgba(147, 197, 253, 0.3);
-            padding: 14px 20px;
-            font-size: 1rem;
+            border: 1px solid rgba(147, 197, 253, 0.2);
+            padding: 16px 20px;
+            font-size: 1.05rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         button:hover {
             background: #2563eb;
             color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.4);
+            border-color: transparent;
         }
 
         .hidden {
             display: none !important;
         }
 
-        .result-view h2 {
-            font-size: 2.2rem;
-            color: #60a5fa;
-            margin-bottom: 1rem;
-            animation: fadeInDown 0.8s ease forwards;
+        /* Cascade Aesthetic Section */
+        .result-view {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
         }
 
-        .result-view p {
+        .hate-text {
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cascadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Continuous staggered waterfall speeds and sizes */
+        .hate-text:nth-child(1) { font-size: 2.2rem; background: linear-gradient(to right, #60a5fa, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation-delay: 0.1s; }
+        .hate-text:nth-child(2) { font-size: 1.8rem; background: linear-gradient(to right, #93c5fd, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation-delay: 0.5s; }
+        .hate-text:nth-child(3) { font-size: 1.5rem; color: #a5b4fc; animation-delay: 0.9s; }
+        .hate-text:nth-child(4) { font-size: 1.3rem; color: #818cf8; opacity: 0.7; animation-delay: 1.3s; }
+        .hate-text:nth-child(5) { font-size: 1.1rem; color: #6366f1; opacity: 0.5; animation-delay: 1.7s; }
+
+        .song-caption {
+            margin-top: 15px;
             color: #93c5fd;
             font-style: italic;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             opacity: 0.8;
-            animation: fadeInUp 1s ease 0.3s forwards;
-            animation-fill-mode: both;
+            animation: cascadeIn 0.8s ease 2.1s forwards;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Safe, styled embed container that works on all browsers */
+        .music-box {
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(147, 197, 253, 0.2);
+            opacity: 0;
+            animation: cascadeIn 0.8s ease 2.4s forwards;
+            width: 100%;
+            height: 80px;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes cascadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="quiz-card">
+    <div class="container">
+        <!-- Question Section -->
         <div id="question-section">
             <h1>Do you hate me?</h1>
             <div class="btn-group">
@@ -110,34 +138,36 @@ html<!DOCTYPE html>
             </div>
         </div>
 
+        <!-- Aesthetic Cascading Result Section -->
         <div id="result-section" class="result-view hidden">
-            <h2>I hate you too.</h2>
-            <p>🎵 Tere bin nahi lagda dil mera dholna...</p>
+            <div class="hate-text">I hate you too.</div>
+            <div class="hate-text">I hate you too.</div>
+            <div class="hate-text">I hate you too.</div>
+            <div class="hate-text">I hate you too.</div>
+            <div class="hate-text">I hate you too.</div>
+            
+            <div class="song-caption">🎵 tere bin nahi lagda dil mera dholna...</div>
+            
+            <!-- Structural player element that forces the browser to unblock streaming -->
+            <div class="music-box">
+                <iframe id="music-player" width="100%" height="80" src="" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
-    <!-- This uses a direct audio archive stream link for the NFAK song -->
-    <audio id="bg-music" src="https://archive.org" preload="auto" crossorigin="anonymous"></audio>
-
     <script>
         function revealResult() {
+            // Unhide elements and kick off the cascading text animations
             document.getElementById('question-section').classList.add('hidden');
             document.getElementById('result-section').classList.remove('hidden');
             
-            const audio = document.getElementById('bg-music');
-            
-            // Forces audio to load and play immediately on click
-            audio.load();
-            audio.play().then(() => {
-                console.log("Music started playing successfully!");
-            }).catch(error => {
-                console.log("Playback failed. Error details:", error);
-            });
+            // Set the player destination source dynamically on click to enforce browser playback permission rules
+            const player = document.getElementById('music-player');
+            player.src = "https://youtube.com";
 
-            // Turn off after 60 seconds
+            // Enforce clean hard shutdown of audio layout exactly after 60 seconds
             setTimeout(() => {
-                audio.pause();
-                audio.currentTime = 0;
+                player.src = ""; 
             }, 60000);
         }
     </script>
