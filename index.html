@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do you?</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; display: flex; justify-content: center; align-items: center; color: #fff; }
+        #quiz-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 0.8s ease; }
+        h1 { margin-bottom: 40px; font-size: 2rem; font-weight: normal; letter-spacing: 2px; text-align: center; }
+        .btn-container { display: flex; gap: 30px; }
+        button { padding: 12px 35px; font-size: 1.1rem; cursor: pointer; border: 1px solid #fff; background-color: transparent; color: white; border-radius: 4px; transition: all 0.3s; }
+        button:hover { background-color: #fff; color: #000; }
+        #spiral-container { display: none; position: relative; width: 600px; height: 600px; justify-content: center; align-items: center; animation: rotateSpiral 15s linear infinite; }
+        @keyframes rotateSpiral { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        .spiral-text { position: absolute; font-weight: bold; text-transform: uppercase; color: #ff3333; white-space: nowrap; transform-origin: left center; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <!-- Step 1: The Question Screen -->
+    <div id="quiz-overlay">
+        <h1>Do you hate me?</h1>
+        <div class="btn-container">
+            <button onclick="startSpiral()">100%</button>
+            <button onclick="startSpiral()">110%</button>
+        </div>
+    </div>
+
+    <!-- Step 2: The Spinning Spiral Container -->
+    <div id="spiral-container"></div>
+
+    <!-- Step 3: Background Audio (Tere Bin Nahi Lagda by NFAK) -->
+    <audio id="bg-music" src="https://archive.org" loop></audio>
+
+    <script>
+        function startSpiral() {
+            // Smoothly hide the question box
+            const overlay = document.getElementById('quiz-overlay');
+            overlay.style.opacity = 0;
+            setTimeout(() => { overlay.style.display = 'none'; }, 800);
+
+            // Play the NFAK background music
+            const music = document.getElementById('bg-music');
+            music.play().catch(e => console.log("Audio play blocked by browser settings"));
+
+            // Trigger the text spiral generation
+            const container = document.getElementById('spiral-container');
+            container.style.display = 'flex';
+            
+            const totalWords = 80; 
+            const phrase = "I HATE YOU TOO  ";
+
+            for (let i = 0; i < totalWords; i++) {
+                const span = document.createElement('span');
+                span.innerText = phrase;
+                span.className = 'spiral-text';
+                
+                // Spiral path alignment formula
+                const angle = i * 0.25; 
+                const radius = 5 + (i * 4.5); 
+                const x = radius * Math.cos(angle);
+                const y = radius * Math.sin(angle);
+                
+                span.style.left = `calc(50% + ${x}px)`;
+                span.style.top = `calc(50% + ${y}px)`;
+                span.style.transform = `rotate(${angle + Math.PI / 2}rad)`;
+                span.style.fontSize = `${9 + (i * 0.35)}px`;
+                span.style.opacity = `${0.2 + (i / totalWords) * 0.8}`;
+
+                container.appendChild(span);
+            }
+        }
+    </script>
+</body>
+</html>
