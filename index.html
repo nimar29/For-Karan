@@ -3,98 +3,142 @@ html<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You</title>
+    <title>The Ultimate Quiz</title>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #060a12; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; align-items: center; color: #fff; }
-        
-        /* Step 1: Minimalist Question Box */
-        #quiz-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #060a12; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        h1 { margin-bottom: 40px; font-size: 1.8rem; font-weight: 300; letter-spacing: 4px; text-align: center; color: #cdd7e5; }
-        .btn-container { display: flex; gap: 40px; }
-        button { padding: 14px 45px; font-size: 1rem; font-weight: 400; letter-spacing: 2px; cursor: pointer; border: 1px solid #1e293b; background-color: transparent; color: #64748b; border-radius: 2px; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; }
-        button:hover { border-color: #38bdf8; color: #38bdf8; background-color: rgba(56, 189, 248, 0.03); box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
-        
-        /* Step 2: Aesthetic Cascade Typography */
-        #cascade-container { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; gap: 12px; }
-        .cascade-line { font-size: 2.2rem; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; color: #00d2ff; opacity: 0; transform: translateY(15px); transition: all 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); text-shadow: 0 0 25px rgba(0, 210, 255, 0.4); }
-        .cascade-line.reveal { opacity: 1; transform: translateY(0); }
-        
-        /* Alternate clean lines for aesthetic contrast */
-        .cascade-line:nth-child(even) { color: #f8fafc; text-shadow: 0 0 20px rgba(248, 250, 252, 0.2); font-weight: 300; font-size: 1.6rem; letter-spacing: 8px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            transition: all 0.5s ease;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            letter-spacing: -0.5px;
+            color: #93c5fd;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button {
+            background: rgba(30, 58, 138, 0.4);
+            color: #bfdbfe;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #2563eb;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .result-view h2 {
+            font-size: 2.2rem;
+            color: #60a5fa;
+            margin-bottom: 1rem;
+            animation: fadeInDown 0.8s ease forwards;
+        }
+
+        .result-view p {
+            color: #93c5fd;
+            font-style: italic;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            animation: fadeInUp 1s ease 0.3s forwards;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <div id="quiz-overlay">
-        <h1>Do you hate me?</h1>
-        <div class="btn-container">
-            <button onclick="startPrank()">100%</button>
-            <button onclick="startPrank()">110%</button>
+    <div class="container" id="quiz-card">
+        <div id="question-section">
+            <h1>Do you hate me?</h1>
+            <div class="btn-group">
+                <button onclick="revealResult()">100%</button>
+                <button onclick="revealResult()">110%</button>
+            </div>
+        </div>
+
+        <div id="result-section" class="result-view hidden">
+            <h2>I hate you too.</h2>
+            <p>🎵 Tere bin nahi lagda dil mera dholna...</p>
         </div>
     </div>
 
-    <div id="cascade-container"></div>
-
-    <!-- Audio Player configured to jump straight to the exact verse stream -->
-    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
-        <source src="https://archive.org" type="audio/mp3">
-    </audio>
+    <!-- This uses a direct audio archive stream link for the NFAK song -->
+    <audio id="bg-music" src="https://archive.org" preload="auto" crossorigin="anonymous"></audio>
 
     <script>
-        function startPrank() {
-            const music = document.getElementById('bg-music');
+        function revealResult() {
+            document.getElementById('question-section').classList.add('hidden');
+            document.getElementById('result-section').classList.remove('hidden');
             
-            // Jumps to 2 mins 46 seconds (166 seconds) for the target lyrics line
-            music.currentTime = 166;
-            music.load();
-            music.currentTime = 166;
-            music.volume = 1.0;
+            const audio = document.getElementById('bg-music');
             
-            var playPromise = music.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    document.body.addEventListener('click', function() { 
-                        music.currentTime = 166;
-                        music.play(); 
-                    }, { once: true });
-                });
-            }
+            // Forces audio to load and play immediately on click
+            audio.load();
+            audio.play().then(() => {
+                console.log("Music started playing successfully!");
+            }).catch(error => {
+                console.log("Playback failed. Error details:", error);
+            });
 
-            // --- 1 MINUTE AUTO STOP & FADE OUT FUNCTION ---
+            // Turn off after 60 seconds
             setTimeout(() => {
-                // Smoothly fade out the music volume over 2 seconds before pausing
-                let fadeInterval = setInterval(() => {
-                    if (music.volume > 0.1) {
-                        music.volume -= 0.1;
-                    } else {
-                        clearInterval(fadeInterval);
-                        music.pause();
-                    }
-                }, 200);
-            }, 58000); // Triggers fade out at 58 seconds so it stops completely at 1 minute
-
-            // Visual fade sequence
-            const overlay = document.getElementById('quiz-overlay');
-            overlay.style.opacity = 0;
-            setTimeout(() => { overlay.style.display = 'none'; }, 1200);
-
-            const container = document.getElementById('cascade-container');
-            container.style.display = 'flex';
-            
-            const linesToCreate = 7;
-            const phrase = "I HATE YOU TOO";
-
-            for (let i = 0; i < linesToCreate; i++) {
-                const line = document.createElement('div');
-                line.innerText = phrase;
-                line.className = 'cascade-line';
-                container.appendChild(line);
-
-                setTimeout(() => {
-                    line.classList.add('reveal');
-                }, 800 + (i * 350));
-            }
+                audio.pause();
+                audio.currentTime = 0;
+            }, 60000);
         }
     </script>
 </body>
