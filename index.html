@@ -1,75 +1,99 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Do you?</title>
+    <title>For You</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; display: flex; justify-content: center; align-items: center; color: #fff; }
-        #quiz-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 0.8s ease; }
-        h1 { margin-bottom: 40px; font-size: 2rem; font-weight: normal; letter-spacing: 2px; text-align: center; }
-        .btn-container { display: flex; gap: 30px; }
-        button { padding: 12px 35px; font-size: 1.1rem; cursor: pointer; border: 1px solid #fff; background-color: transparent; color: white; border-radius: 4px; transition: all 0.3s; }
-        button:hover { background-color: #fff; color: #000; }
-        #spiral-container { display: none; position: relative; width: 600px; height: 600px; justify-content: center; align-items: center; animation: rotateSpiral 15s linear infinite; }
-        @keyframes rotateSpiral { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-        .spiral-text { position: absolute; font-weight: bold; text-transform: uppercase; color: #ff3333; white-space: nowrap; transform-origin: left center; letter-spacing: 1px; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #060a12; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; align-items: center; color: #fff; }
+        
+        /* Step 1: Minimalist Question Box */
+        #quiz-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #060a12; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        h1 { margin-bottom: 40px; font-size: 1.8rem; font-weight: 300; letter-spacing: 4px; text-align: center; color: #cdd7e5; }
+        .btn-container { display: flex; gap: 40px; }
+        button { padding: 14px 45px; font-size: 1rem; font-weight: 400; letter-spacing: 2px; cursor: pointer; border: 1px solid #1e293b; background-color: transparent; color: #64748b; border-radius: 2px; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; }
+        button:hover { border-color: #38bdf8; color: #38bdf8; background-color: rgba(56, 189, 248, 0.03); box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
+        
+        /* Step 2: Aesthetic Cascade Typography */
+        #cascade-container { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; gap: 12px; }
+        .cascade-line { font-size: 2.2rem; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; color: #00d2ff; opacity: 0; transform: translateY(15px); transition: all 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); text-shadow: 0 0 25px rgba(0, 210, 255, 0.4); }
+        .cascade-line.reveal { opacity: 1; transform: translateY(0); }
+        
+        /* Alternate clean lines for aesthetic contrast */
+        .cascade-line:nth-child(even) { color: #f8fafc; text-shadow: 0 0 20px rgba(248, 250, 252, 0.2); font-weight: 300; font-size: 1.6rem; letter-spacing: 8px; }
     </style>
 </head>
 <body>
 
-    <!-- Step 1: The Question Screen -->
     <div id="quiz-overlay">
         <h1>Do you hate me?</h1>
         <div class="btn-container">
-            <button onclick="startSpiral()">100%</button>
-            <button onclick="startSpiral()">110%</button>
+            <button onclick="startPrank()">100%</button>
+            <button onclick="startPrank()">110%</button>
         </div>
     </div>
 
-    <!-- Step 2: The Spinning Spiral Container -->
-    <div id="spiral-container"></div>
+    <div id="cascade-container"></div>
 
-    <!-- Step 3: Background Audio (Tere Bin Nahi Lagda by NFAK) -->
-    <audio id="bg-music" src="https://archive.org" loop></audio>
+    <!-- Audio Player configured to jump straight to the exact verse stream -->
+    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
+        <source src="https://archive.org" type="audio/mp3">
+    </audio>
 
     <script>
-        function startSpiral() {
-            // Smoothly hide the question box
+        function startPrank() {
+            const music = document.getElementById('bg-music');
+            
+            // Jumps to 2 mins 46 seconds (166 seconds) for the target lyrics line
+            music.currentTime = 166;
+            music.load();
+            music.currentTime = 166;
+            music.volume = 1.0;
+            
+            var playPromise = music.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    document.body.addEventListener('click', function() { 
+                        music.currentTime = 166;
+                        music.play(); 
+                    }, { once: true });
+                });
+            }
+
+            // --- 1 MINUTE AUTO STOP & FADE OUT FUNCTION ---
+            setTimeout(() => {
+                // Smoothly fade out the music volume over 2 seconds before pausing
+                let fadeInterval = setInterval(() => {
+                    if (music.volume > 0.1) {
+                        music.volume -= 0.1;
+                    } else {
+                        clearInterval(fadeInterval);
+                        music.pause();
+                    }
+                }, 200);
+            }, 58000); // Triggers fade out at 58 seconds so it stops completely at 1 minute
+
+            // Visual fade sequence
             const overlay = document.getElementById('quiz-overlay');
             overlay.style.opacity = 0;
-            setTimeout(() => { overlay.style.display = 'none'; }, 800);
+            setTimeout(() => { overlay.style.display = 'none'; }, 1200);
 
-            // Play the NFAK background music
-            const music = document.getElementById('bg-music');
-            music.play().catch(e => console.log("Audio play blocked by browser settings"));
-
-            // Trigger the text spiral generation
-            const container = document.getElementById('spiral-container');
+            const container = document.getElementById('cascade-container');
             container.style.display = 'flex';
             
-            const totalWords = 80; 
-            const phrase = "I HATE YOU TOO  ";
+            const linesToCreate = 7;
+            const phrase = "I HATE YOU TOO";
 
-            for (let i = 0; i < totalWords; i++) {
-                const span = document.createElement('span');
-                span.innerText = phrase;
-                span.className = 'spiral-text';
-                
-                // Spiral path alignment formula
-                const angle = i * 0.25; 
-                const radius = 5 + (i * 4.5); 
-                const x = radius * Math.cos(angle);
-                const y = radius * Math.sin(angle);
-                
-                span.style.left = `calc(50% + ${x}px)`;
-                span.style.top = `calc(50% + ${y}px)`;
-                span.style.transform = `rotate(${angle + Math.PI / 2}rad)`;
-                span.style.fontSize = `${9 + (i * 0.35)}px`;
-                span.style.opacity = `${0.2 + (i / totalWords) * 0.8}`;
+            for (let i = 0; i < linesToCreate; i++) {
+                const line = document.createElement('div');
+                line.innerText = phrase;
+                line.className = 'cascade-line';
+                container.appendChild(line);
 
-                container.appendChild(span);
+                setTimeout(() => {
+                    line.classList.add('reveal');
+                }, 800 + (i * 350));
             }
         }
     </script>
